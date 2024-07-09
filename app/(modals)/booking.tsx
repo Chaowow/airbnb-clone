@@ -7,6 +7,6 @@ const booking = () => {
       <Text>Booking</Text>
     </View>
   );
-}
+};
 
 export default booking;

@@ -54,6 +54,6 @@ const Layout = () => {
         />
     </Tabs>
   );
-}
+};
 
 export default Layout;

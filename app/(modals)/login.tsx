@@ -7,6 +7,6 @@ const login = () => {
       <Text>Login</Text>
     </View>
   );
-}
+};
 
 export default login;
