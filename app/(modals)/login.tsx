@@ -15,13 +15,18 @@ enum Strategy {
 
 const login = () => {
   useWarmUpBrowser();
+
+  // This hook allows for navigation and handling route changes 
   const router = useRouter();
 
   const { startOAuthFlow: googleAuth } = useOAuth({strategy: 'oauth_google'});
   const { startOAuthFlow: appleAuth } = useOAuth({strategy: 'oauth_apple'});
   const { startOAuthFlow: facebookAuth } = useOAuth({strategy: 'oauth_facebook'});
 
+  // Function to handle the selection of an OAuth strategy
   const onSelectAuth = async (strategy: Strategy) => {
+
+    // Map the selected strategy to the corresponding authentication function
     const selectedAuth = {
       [Strategy.Google]: googleAuth,
       [Strategy.Apple]: appleAuth,
@@ -29,12 +34,13 @@ const login = () => {
     } [strategy];
 
     try {
+      // Start the selected OAuth flow and await its result
       const { createdSessionId, setActive } = await selectedAuth();
-      console.log("~ file: login.tsx:31 ~ onSelectAuth ~ createdSessionId:", createdSessionId);
 
+      // If a session was successfully created, set it as the active session and navigate back
       if (createdSessionId) {
         setActive!({ session: createdSessionId })
-        router.back();
+        router.back(); // Navigate back to the previous page
       }
     } catch (err) {
       console.error('OAuth error: ', err)
