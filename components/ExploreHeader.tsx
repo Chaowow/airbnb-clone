@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,7 +25,7 @@ const categories = [
     },
     {
         name: 'City',
-        icon: 'appartment'
+        icon: 'apartment'
     },
     {
         name: 'Beachfront',
@@ -58,6 +58,20 @@ const ExploreHeader = () => {
                     <Ionicons name='options-outline' size={24} />
                 </TouchableOpacity>
             </View>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+                alignItems: 'center',
+                gap: 20,
+                paddingHorizontal: 16
+            }}>
+                {categories.map((item, index) => (
+                    <TouchableOpacity key={index}>
+                        <MaterialIcons size={24} name={item.icon as any}/>
+                        <Text>{item.name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
         </View>
     </SafeAreaView>
   )
