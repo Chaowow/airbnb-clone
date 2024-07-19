@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -38,44 +38,57 @@ const categories = [
 ];
 
 const ExploreHeader = () => {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={styles.container}>
-            <View style={styles.actionRow}>
-                <Link href={'/(modals)/booking'} asChild>
-                    <TouchableOpacity style={styles.searchBtn}>
-                        <Ionicons name='search' size={24}/>
-                        <View>
-                            <Text style={{ fontFamily: 'mon-sb' }}>Where to?</Text>
-                            <Text style={{ fontFamily: 'mon', color: Colors.grey }}>
-                                Anywhere ∙ Any week
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
+    const itemsRef = useRef<Array<TouchableOpacity | null >>([]);
+    const [activeIndex, setActiveIndex] = useState(0);
 
-                <TouchableOpacity style={styles.filterBtn}>
-                    <Ionicons name='options-outline' size={24} />
-                </TouchableOpacity>
+    const selectCategory = (index: number) => {
+        setActiveIndex(index);
+    }
+
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View style={styles.container}>
+                <View style={styles.actionRow}>
+                    <Link href={'/(modals)/booking'} asChild>
+                        <TouchableOpacity style={styles.searchBtn}>
+                            <Ionicons name='search' size={24}/>
+                            <View>
+                                <Text style={{ fontFamily: 'mon-sb' }}>Where to?</Text>
+                                <Text style={{ fontFamily: 'mon', color: Colors.grey }}>
+                                    Anywhere ∙ Any week
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </Link>
+
+                    <TouchableOpacity style={styles.filterBtn}>
+                        <Ionicons name='options-outline' size={24} />
+                    </TouchableOpacity>
+                </View>
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                    alignItems: 'center',
+                    gap: 20,
+                    paddingHorizontal: 16
+                }}>
+                    {categories.map((item, index) => (
+                        <TouchableOpacity 
+                            onPress={() => selectCategory(index)}
+                            key={index}
+                            ref={(el) => itemsRef.current[index] = el}
+                            style={activeIndex === index ? 
+                            styles.categoriesBtnActive : styles.categoriesBtn}
+                        >
+                            <MaterialIcons size={24} name={item.icon as any}/>
+                            <Text>{item.name}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
             </View>
-
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-                alignItems: 'center',
-                gap: 20,
-                paddingHorizontal: 16
-            }}>
-                {categories.map((item, index) => (
-                    <TouchableOpacity key={index}>
-                        <MaterialIcons size={24} name={item.icon as any}/>
-                        <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View>
-    </SafeAreaView>
-  )
-}
+        </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -114,7 +127,31 @@ const styles = StyleSheet.create({
             width: 1,
             height: 1
         }
-    }
+    },
+    categoryText: {
+        fontSize: 14,
+        fontFamily: 'mon-sb',
+        color: Colors.grey
+    },
+    categoryTextActive: {
+        fontSize: 14,
+        fontFamily: 'mon-sb',
+        color: '#000'
+    },
+    categoriesBtn: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 8
+    },
+    categoriesBtnActive: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 8,
+        borderBottomColor: '#000',
+        borderBottomWidth: 2
+    },
 });
 
 export default ExploreHeader;
