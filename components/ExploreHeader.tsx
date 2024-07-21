@@ -1,10 +1,18 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { 
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableOpacity, 
+    ScrollView, 
+    SafeAreaView 
+} from 'react-native';
 import React, { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
 import Colors from '@/constants/Colors';
+import * as Haptics from 'expo-haptics';
+
 
 const categories = [
     {
@@ -38,11 +46,19 @@ const categories = [
 ];
 
 const ExploreHeader = () => {
+    const scrollRef = useRef<ScrollView>(null);
     const itemsRef = useRef<Array<TouchableOpacity | null >>([]);
     const [activeIndex, setActiveIndex] = useState(0);
 
     const selectCategory = (index: number) => {
+        const selected =  itemsRef.current[index];
         setActiveIndex(index);
+
+        selected?.measure((x) => {
+            scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
+        })
+
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
     return (
@@ -66,11 +82,14 @@ const ExploreHeader = () => {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    gap: 20,
-                    paddingHorizontal: 16
+                <ScrollView 
+                    ref={scrollRef}
+                    horizontal 
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{
+                        alignItems: 'center',
+                        gap: 20,
+                        paddingHorizontal: 16
                 }}>
                     {categories.map((item, index) => (
                         <TouchableOpacity 
@@ -80,8 +99,17 @@ const ExploreHeader = () => {
                             style={activeIndex === index ? 
                             styles.categoriesBtnActive : styles.categoriesBtn}
                         >
-                            <MaterialIcons size={24} name={item.icon as any}/>
-                            <Text>{item.name}</Text>
+                            <MaterialIcons 
+                                size={24} 
+                                name={item.icon as any}
+                                color={activeIndex === index ? '#000' : Colors.grey}
+                            />
+                            <Text 
+                                style={activeIndex === index ? 
+                                styles.categoryTextActive : styles.categoryText}
+                            >
+                                {item.name}
+                            </Text>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
