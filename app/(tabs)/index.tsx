@@ -6,6 +6,8 @@ import Listings from '@/components/Listings';
 import listingsData from '@/assets/data/air-bnb-listings.json';
 import ListingsMap from '@/components/ListingsMap';
 import listingDataGeo from '@/assets/data/airbnb-listings.geo.json';
+import ListingsBottomSheet from '@/components/ListingsBottomSheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Page = () => {
   const [category, setCategory] = useState('Tiny homes');
@@ -16,15 +18,18 @@ const Page = () => {
   };
 
   return (
-    <View style={{ flex: 1, marginTop: 130 }}>
-      <Stack.Screen 
-        options={{
-          header: () => <ExploreHeader onCategoryChanged={onDataChanged}/>
-        }}
-      />
-      {/* <Listings listings={items} category={category}/> */}
-      <ListingsMap listings={listingDataGeo}/>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1}}>
+      <View style={{ flex: 1, marginTop: 130 }}>
+        <Stack.Screen 
+          options={{
+            header: () => <ExploreHeader onCategoryChanged={onDataChanged}/>
+          }}
+        />
+        {/* <Listings listings={items} category={category}/> */}
+        <ListingsMap listings={listingDataGeo} />
+        <ListingsBottomSheet listings={items} category={category} />
+      </View>
+    </GestureHandlerRootView>
   );
 };
 

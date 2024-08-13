@@ -17,11 +17,16 @@ import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 interface Props {
     listings: any[];
     category: string;
+    refresh: number;
 }
 
-const Listings = ({ listings: items, category }: Props) => {
+const Listings = ({ listings: items, category, refresh }: Props) => {
   const [loading, setLoading] = useState(false);
   const listRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    console.log('REFRESH LISTINGS');
+  }, [refresh]);
 
   useEffect(() => {
       // console.log('RELOAD LISTINGS', items.length);
